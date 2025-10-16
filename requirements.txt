@@ -28,4 +28,4 @@ httpx
 pydantic
 pydantic-settings
 email-validator
-request
+requests
