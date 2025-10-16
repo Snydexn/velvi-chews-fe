@@ -44,3 +44,12 @@ async def update_redeem_item(
     current_user = Depends(admin_required)  # ← hanya admin bisa
 ):
     return RedeemItemService.update_item_by_id(db, item_id, name, points_required, stock, file)
+
+# ========== DELETE ITEM (Admin) ==========
+@router.delete("/{item_id}")
+def delete_redeem_item(
+    item_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(admin_required) 
+):
+    return RedeemItemService.delete_item_by_id(db, item_id)

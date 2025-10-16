@@ -129,3 +129,19 @@ class RedeemItemService:
             .order_by(RedeemHistory.created_at.desc())
             .all()
         )
+    @staticmethod
+    def delete_item_by_id(db: Session, item_id: int):
+        """Hapus item redeem berdasarkan ID"""
+        item = db.query(RedeemItem).filter(RedeemItem.id == item_id).first()
+        if not item:
+            raise HTTPException(status_code=404, detail="Item tidak ditemukan")
+
+        # Hapus file gambar jika ada
+        if item.image_url:
+            image_path = item.image_url.lstrip("/")  # remove leading slash
+            if os.path.exists(image_path):
+                os.remove(image_path)
+
+        db.delete(item)
+        db.commit()
+        return {"message": f"Item '{item.name}' berhasil dihapus"}

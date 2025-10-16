@@ -10,6 +10,9 @@ class Settings(BaseSettings):
 
     BACKEND_URL:str
     GAS_URL:str
+    ADMIN_EMAIL: str
+    ADMIN_PASSWORD: str
+
 
 
 

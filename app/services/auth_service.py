@@ -8,8 +8,6 @@ from app.utils.config import settings
 from app.database import get_db
 from app.utils.email_verification import create_verification_token
 from app.utils.mailer import send_verification_email
-import asyncio
-from fastapi import BackgroundTasks
 
 
 

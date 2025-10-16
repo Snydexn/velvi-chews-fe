@@ -2,12 +2,13 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal, engine, Base
 from app.models.user import User
 from app.utils.security import hash_password, create_access_token
+from app.utils.config import settings
 
 # Create table jika belum ada
 Base.metadata.create_all(bind=engine)
 
 def seed_admin(db: Session):
-    admin_email = "adminvelvichews@gmail.com"
+    admin_email = settings.ADMIN_EMAIL
     existing_admin = db.query(User).filter(User.email == admin_email).first()
     if existing_admin:
         print("Admin sudah ada, skip seeding ✅")
@@ -17,7 +18,7 @@ def seed_admin(db: Session):
     admin = User(
         name="Admin",
         email=admin_email,
-        password_hash=hash_password("admin123"),  # password default
+        password_hash=hash_password(settings.ADMIN_PASSWORD),
         role="admin",
         is_verified=True
     )
