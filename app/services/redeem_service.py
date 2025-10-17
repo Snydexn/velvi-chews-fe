@@ -10,7 +10,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 class RedeemItemService:
     @staticmethod
-    def create_item(db: Session, name: str, points_required: int, stock: int, file: UploadFile = None):
+    def create_item(db: Session, name: str, points_required: int, description:str, stock: int, file: UploadFile = None):
         """Buat item baru untuk redeem store"""
 
         image_url = None
@@ -24,6 +24,7 @@ class RedeemItemService:
             name=name,
             image_url=image_url,
             points_required=points_required,
+            description=description,
             stock=stock
         )
         db.add(new_item)
@@ -49,6 +50,7 @@ class RedeemItemService:
         item_id: int,
         name: str = None,
         points_required: int = None,
+        description:str =None,
         stock: int = None,
         file: UploadFile = None
     ):
@@ -62,6 +64,8 @@ class RedeemItemService:
             item.name = name
         if points_required is not None:
             item.points_required = points_required
+        if description is not None:
+            item.description = description
         if stock is not None:
             item.stock = stock
 

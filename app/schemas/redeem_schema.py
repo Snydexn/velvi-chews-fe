@@ -8,6 +8,7 @@ class RedeemItemBase(BaseModel):
     name: str
     image_url: Optional[str] = None
     points_required: int
+    description:str
     stock: int
 
 

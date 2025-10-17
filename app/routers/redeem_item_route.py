@@ -13,12 +13,13 @@ router = APIRouter(prefix="/redeem-items", tags=["Redeem Items"])
 def create_redeem_item(
     name: str = Form(...),
     points_required: int = Form(...),
+    description:str=Form(...),
     stock: int = Form(...),
     file: UploadFile = File(None),
     db: Session = Depends(get_db),
     current_user = Depends(admin_required)  # ← hanya admin bisa
 ):
-    return RedeemItemService.create_item(db, name, points_required, stock, file)
+    return RedeemItemService.create_item(db, name, points_required, description,stock, file)
 
 
 # ========== GET ALL ITEMS ==========
@@ -38,12 +39,13 @@ async def update_redeem_item(
     item_id: int,
     name: str = Form(None),
     points_required: int = Form(None),
+    description:str=Form(...),
     stock: int = Form(None),
     file: UploadFile = File(None),
     db: Session = Depends(get_db),
     current_user = Depends(admin_required)  # ← hanya admin bisa
 ):
-    return RedeemItemService.update_item_by_id(db, item_id, name, points_required, stock, file)
+    return RedeemItemService.update_item_by_id(db, item_id, name, points_required, description,stock,file)
 
 # ========== DELETE ITEM (Admin) ==========
 @router.delete("/{item_id}")
