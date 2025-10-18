@@ -4,13 +4,14 @@ from fastapi import UploadFile, HTTPException, status
 from app.models.redeem_item import RedeemItem
 from app.models.redeem_history import RedeemHistory
 from app.models.user import User  # pastikan kamu punya model User dengan field "points"
+from app.utils.config import settings
 
 UPLOAD_DIR = "uploads/redeem_items"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 class RedeemItemService:
     @staticmethod
-    def create_item(db: Session, name: str, points_required: int, description:str, stock: int, file: UploadFile = None):
+    def create_item(db: Session, name: str, points_required: int,  stock: int, description:str, file: UploadFile = None):
         """Buat item baru untuk redeem store"""
 
         image_url = None
@@ -18,14 +19,14 @@ class RedeemItemService:
             file_path = os.path.join(UPLOAD_DIR, file.filename)
             with open(file_path, "wb") as f:
                 f.write(file.file.read())
-            image_url = f"/uploads/redeem_items/{file.filename}"
+            image_url = f"{settings.BACKEND_URL}/uploads/redeem_items/{file.filename}"
 
         new_item = RedeemItem(
             name=name,
             image_url=image_url,
             points_required=points_required,
+            stock=stock,
             description=description,
-            stock=stock
         )
         db.add(new_item)
         db.commit()
@@ -50,8 +51,8 @@ class RedeemItemService:
         item_id: int,
         name: str = None,
         points_required: int = None,
-        description:str =None,
         stock: int = None,
+        description:str =None,
         file: UploadFile = None
     ):
         """Update item redeem berdasarkan ID"""
@@ -64,17 +65,16 @@ class RedeemItemService:
             item.name = name
         if points_required is not None:
             item.points_required = points_required
-        if description is not None:
-            item.description = description
         if stock is not None:
             item.stock = stock
-
+        if description is not None:
+            item.description = description
         # Jika ada file gambar baru, simpan dan update URL
         if file:
             file_path = os.path.join(UPLOAD_DIR, file.filename)
             with open(file_path, "wb") as f:
                 f.write(file.file.read())
-            item.image_url = f"/uploads/redeem_items/{file.filename}"
+            item.image_url = f"{settings.BACKEND_URL}/uploads/redeem_items/{file.filename}"
 
         db.commit()
         db.refresh(item)

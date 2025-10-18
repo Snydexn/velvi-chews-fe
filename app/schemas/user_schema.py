@@ -27,6 +27,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     total_points: int  # <- tetap ditampilkan, tapi tidak bisa diubah manual
     profile_picture: Optional[str] = None
+    role:str
     created_at: datetime
     updated_at: datetime
 

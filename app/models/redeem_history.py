@@ -10,3 +10,4 @@ class RedeemHistory(Base):
     item_id = Column(Integer, ForeignKey("redeem_items.id", ondelete="CASCADE"), nullable=False)
     points_spent = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+

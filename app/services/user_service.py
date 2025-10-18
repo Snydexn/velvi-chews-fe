@@ -35,7 +35,7 @@ class UserService:
                 shutil.copyfileobj(file.file, f)
 
             # Simpan URL relatif (biar bisa diakses dari frontend)
-            current_user.profile_picture = f"/uploads/{filename}"
+            current_user.profile_picture = filename
 
         db.commit()
         db.refresh(current_user)
