@@ -19,10 +19,9 @@ def get_my_profile(
 
     # Buat URL lengkap supaya bisa langsung dipakai di frontend
     if user.profile_picture:
-        user.profile_picture = f"{settings.BACKEND_URL}uploads/{user.profile_picture}"
+        user.profile_picture = f"{request.base_url}uploads/{user.profile_picture}"
 
     return user
-
 
 # ========== UPDATE Profile (nama / foto profil) ==========
 @router.put("/me", response_model=UserResponse)
