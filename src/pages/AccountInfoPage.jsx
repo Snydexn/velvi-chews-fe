@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBack } from 'react-icons/io5';
 import { FaPencilAlt } from 'react-icons/fa';
@@ -6,21 +6,47 @@ import DefaultAvatar from '../assets/default-avatar.png';
 
 const AccountInfoPage = () => {
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
-    const currentUser = {
-        name: 'Chris Jae',
-        email: 'chrisjae@gmail.com',
-        avatar: DefaultAvatar,
-    };
-
-    const [name, setName] = useState(currentUser.name);
-    const [email, setEmail] = useState(currentUser.email);
-    const [imagePreview, setImagePreview] = useState(currentUser.avatar);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [imagePreview, setImagePreview] = useState(DefaultAvatar);
+    const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
 
+    // 🧠 Ambil token user dari localStorage
+    const token = localStorage.getItem('token');
+
+    // === GET /users/me ===
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await fetch(`${API_URL}/users/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch profile');
+                const data = await res.json();
+
+                setName(data.name || '');
+                setEmail(data.email || '');
+                setImagePreview(data.avatar_url || DefaultAvatar);
+            } catch (err) {
+                console.error(err);
+                alert('Gagal memuat data profil.');
+            }
+        };
+
+        if (token) fetchProfile();
+    }, [API_URL, token]);
+
+    // === Ubah foto preview ===
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            setSelectedFile(file);
             setImagePreview(URL.createObjectURL(file));
         }
     };
@@ -29,17 +55,39 @@ const AccountInfoPage = () => {
         fileInputRef.current.click();
     };
 
-    const handleUpdate = (e) => {
+    // === PUT /users/me ===
+    const handleUpdate = async (e) => {
         e.preventDefault();
-        console.log('Updated Info:', { name });
-        alert('Profile updated successfully!');
-        navigate(-1);
+
+        try {
+            const formData = new FormData();
+            formData.append('name', name);
+            if (selectedFile) {
+                formData.append('file', selectedFile);
+            }
+
+            const res = await fetch(`${API_URL}/users/me`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error('Failed to update profile');
+
+            const data = await res.json();
+            alert('Profile updated successfully!');
+            setImagePreview(data.avatar_url || DefaultAvatar);
+            navigate(-1);
+        } catch (err) {
+            console.error(err);
+            alert('Gagal memperbarui profil.');
+        }
     };
 
     return (
-        // Perubahan 1: Background utama halaman diubah menjadi putih
         <div className="relative min-h-screen w-full bg-white pb-24">
-            {/* Header sekarang simpel di atas background putih */}
             <header className="relative w-full px-4 pt-5 pb-16">
                 <div className="relative flex items-center justify-center">
                     <button onClick={() => navigate(-1)} className="absolute left-0">
@@ -49,10 +97,8 @@ const AccountInfoPage = () => {
                 </div>
             </header>
 
-            {/* Perubahan 2: Shape biru diposisikan di bagian bawah */}
             <div className="absolute bottom-15 left-0 -z-0 h-3/4 w-full rounded-t-[50px] bg-[#B4E2F2]"></div>
 
-            {/* Konten Utama */}
             <main className="relative z-10 -mt-12 flex flex-col items-center gap-6 px-6">
                 {/* Foto Profil */}
                 <div className="relative">
@@ -79,7 +125,6 @@ const AccountInfoPage = () => {
 
                 {/* Form Section */}
                 <form onSubmit={handleUpdate} className="w-full max-w-sm">
-                    {/* Input Nama */}
                     <div className="w-full mb-4">
                         <label className="mb-1 block text-sm font-medium text-white">Name</label>
                         <input
@@ -90,7 +135,6 @@ const AccountInfoPage = () => {
                         />
                     </div>
 
-                    {/* Input Email (Tidak bisa diubah) */}
                     <div className="w-full">
                         <label className="mb-1 block text-sm font-medium text-white">Email</label>
                         <input
@@ -101,7 +145,6 @@ const AccountInfoPage = () => {
                         />
                     </div>
 
-                    {/* Tombol Update */}
                     <div className="mt-8 flex w-full justify-center">
                         <button
                             type="submit"

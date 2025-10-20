@@ -1,21 +1,28 @@
-import React from 'react';
-// Perubahan 1: Impor 'Link' untuk navigasi
-import { useNavigate, Link } from 'react-router-dom'; 
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { IoChevronBack } from 'react-icons/io5';
-import DinoGummy from '../assets/dino-gummy.png'; 
+import DinoGummy from '../assets/dino-gummy.png';
 
-// Perubahan 2: Terima prop 'id' untuk membuat link dinamis
-const RedeemCard = ({ id, title, expiryDate, imageSrc }) => (
+const API_BASE_URL = import.meta.env.VITE_API_URL; // 🔥 otomatis ambil dari .env
+
+const RedeemCard = ({ id, name, description, points_required, stock, image_url }) => (
   <div className="w-full max-w-sm rounded-2xl bg-white p-3 shadow-lg">
-    <img src={imageSrc} alt={title} className="mb-3 w-full rounded-xl object-cover" />
+    <img
+      src={image_url ? `${image_url}` : DinoGummy}
+      alt={name}
+      className="mb-3 w-full rounded-xl object-cover"
+      />
     <div className="flex items-center justify-between">
       <div>
-        <h3 className="font-bold text-gray-800">{title}</h3>
-        <p className="text-xs text-gray-400">Voucher berlaku sampai {expiryDate}</p>
+        <h3 className="font-bold text-gray-800">{name}</h3>
+        <p className="text-xs text-gray-400">Stock: {stock}</p>
+        <p className="text-xs text-gray-500 line-clamp-2">{description}</p>
+        <p className="text-sm font-semibold text-[#FF89AC] mt-1">
+          {points_required} Points
+        </p>
       </div>
-      {/* Perubahan 3: Ganti <button> dengan <Link> dan arahkan ke halaman detail */}
-      <Link 
-        to={`/redeem/${id}`} 
+      <Link
+        to={`/redeem/${id}`}
         className="rounded-lg bg-[#FF89AC] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#FCAFC1]"
       >
         Redeem
@@ -25,12 +32,35 @@ const RedeemCard = ({ id, title, expiryDate, imageSrc }) => (
 );
 
 const RedeemPage = () => {
-  const navigate = useNavigate(); 
-  const vouchers = [
-    { id: 1, title: 'Buy 1 Get 1 Dino Edition', expiry: '19/09/2025' },
-    { id: 2, title: 'Buy 1 Get 1 Dino Edition', expiry: '19/09/2025' },
-    { id: 3, title: 'Buy 1 Get 1 Dino Edition', expiry: '19/09/2025' },
-  ];
+  const navigate = useNavigate();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Ambil data dari backend FastAPI
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem-items`);
+        if (!response.ok) throw new Error("Gagal mengambil data");
+        const data = await response.json();
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching redeem items:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-gray-500">
+        Loading items...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gray-50 pb-24">
@@ -44,15 +74,21 @@ const RedeemPage = () => {
       </header>
 
       <main className="flex flex-col items-center gap-4 p-6">
-        {vouchers.map((voucher) => (
-          <RedeemCard
-            key={voucher.id}
-            id={voucher.id} // Perubahan 2: Kirim 'id' sebagai prop
-            title={voucher.title}
-            expiryDate={voucher.expiry}
-            imageSrc={DinoGummy}
-          />
-        ))}
+        {items.length > 0 ? (
+          items.map((item) => (
+            <RedeemCard
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              description={item.description}
+              points_required={item.points_required}
+              stock={item.stock}
+              image_url={item.image_url} // pastikan field ini sesuai schema backend
+            />
+          ))
+        ) : (
+          <p className="text-gray-500">Belum ada item redeem tersedia.</p>
+        )}
       </main>
     </div>
   );

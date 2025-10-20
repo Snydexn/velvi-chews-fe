@@ -1,32 +1,84 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoScan, IoTicketOutline, IoCartOutline } from 'react-icons/io5'; 
-
 import TopShape from '../assets/uppermembership.png'; 
 import BottomWave from '../assets/bottomwave.png'; 
 import Navbar from '../components/NavBar';
 import { NavLink } from 'react-router-dom';
 
 const MembershipPage = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [user, setUser] = useState(null);
+  const [redeemHistory, setRedeemHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // === Ambil data profil + riwayat redeem ===
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "/login";
+          return;
+        }
+
+        // Ambil data profil
+        const profileRes = await fetch(`${API_URL}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const profileData = await profileRes.json();
+        setUser(profileData);
+
+        // Ambil data riwayat redeem
+        const historyRes = await fetch(`${API_URL}/redeem-history`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const historyData = await historyRes.json();
+        
+        setRedeemHistory(historyData);
+      } catch (err) {
+        console.error("Gagal memuat data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [API_URL]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-gray-500">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
   return (
     <div className="relative min-h-screen w-full bg-gray-50 pb-24">
-    <Navbar />
+      <Navbar />
       <img 
         src={TopShape} 
         alt="Top background shape" 
         className="absolute top-0 left-0 w-full -z-0"
       />
       
+      {/* === POINT SECTION === */}
       <header className="relative z-10 flex justify-center pt-12">
         <div className="flex h-56 w-56 items-center justify-center rounded-full bg-[#EAF7FF] shadow-xl"> 
           <div className="flex h-48 w-48 items-center justify-center rounded-full bg-white/40 shadow-xl">
             <div className="flex h-40 w-40 flex-col items-center justify-center rounded-full bg-white shadow-[inset_0_0_8px_rgba(0,0,0,0.08)]">
               <span className="text-base text-[#B4E2F2]">Your Point</span>
-              <span className="text-6xl font-bold text-[#B4E2F2]">17</span>
+              <span className="text-6xl font-bold text-[#B4E2F2]">
+                {user?.total_points ?? 0}
+              </span>
             </div>
           </div>
         </div>
       </header>
 
+      {/* === MENU === */}
       <main className="relative z-10 -mt-10 flex flex-col items-center gap-8 px-6">
         <div className="flex w-full max-w-xs justify-around rounded-2xl bg-[#FCAFC1] mt-15 p-3 shadow-lg">
           <div className="flex flex-col items-center gap-2">
@@ -51,21 +103,39 @@ const MembershipPage = () => {
           </div>
         </div>
 
-        {/* Riwayat Redeem */}
+        {/* === REDEEM HISTORY === */}
         <div className="w-full max-w-xs self-center">
           <h2 className="mb-3 text-lg font-bold text-[#FCAFC1]">Redeem History</h2>
-          <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-md">
-            <div>
-              <p className="font-semibold text-gray-800">Voucher B1G1</p>
-              <p className="text-xs text-gray-400">13/09/2025</p>
-            </div>
-            <p className="text-xl font-bold text-gray-700">-10</p>
-          </div>
-        </div>
 
+          {redeemHistory.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center">Belum ada riwayat redeem</p>
+          ) : (
+            redeemHistory.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-md mb-2"
+              >
+                <div>
+                  <p className="font-semibold text-gray-800">{item.item?.name || '-'}</p>
+                  <p className="text-xs text-gray-400">
+                    {item.created_at
+                      ? new Date(item.created_at.replace(" ", "T")).toLocaleDateString(
+                          "id-ID",
+                          { year: "numeric", month: "short", day: "numeric" }
+                        )
+                      : "-"}
+                  </p>
+                </div>
+                <p className="text-xl font-bold text-gray-700">
+                  -{item.points_spent ?? 0}
+                </p>
+              </div>
+            ))
+          )}
+
+        </div>
       </main>
 
-      {/* 4. Background Bawah */}
       <img 
         src={BottomWave} 
         alt="Bottom background wave" 

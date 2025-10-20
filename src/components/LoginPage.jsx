@@ -1,55 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../assets/logo.png'; 
-import WaveTop from '../assets/upperwave.png'; 
-import WaveBottom from '../assets/bottomwave.png'; 
+import Logo from '../assets/logo.png';
+import WaveTop from '../assets/upperwave.png';
+import WaveBottom from '../assets/bottomwave.png';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  const handleLogin = () => {
-    // nanti bisa ditambah validasi login kalau sudah punya backend
-    navigate('/home');
+  const handleLogin = async (e) => {
+    e.preventDefault(); // supaya tidak reload halaman
+    setError('');
+
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || 'Login gagal');
+      }
+
+      const data = await response.json();
+
+      // Simpan token ke localStorage (jika pakai JWT)
+      localStorage.setItem('token', data.access_token);
+
+      // Redirect ke home
+      navigate('/home');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-start overflow-hidden bg-white">
-      
-      <img
-        src={WaveTop}
-        alt="Top wave decoration"
-        className="absolute top-0 left-0 w-full"
-      />
+      <img src={WaveTop} alt="Top wave decoration" className="absolute top-0 left-0 w-full" />
 
       <div className="z-10 mt-16 flex w-full max-w-xs flex-col items-center p-4 sm:max-w-sm md:mt-20">
-        <img
-          src={Logo}
-          alt="Velvi Chews Logo"
-          className="mb-3 w-32"
-        />
+        <img src={Logo} alt="Velvi Chews Logo" className="mb-3 w-32" />
 
-        <div className="w-full rounded-2xl bg-white p-6 shadow-xl">
+        <form onSubmit={handleLogin} className="w-full rounded-2xl bg-white p-6 shadow-xl">
           <h2 className="mb-6 text-center text-2xl font-bold text-[#FCAFC1]">Login</h2>
-          
+
           <input
-            type="text"
-            placeholder="Input your username here"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mb-4 w-full rounded-xl border-0 bg-[#FCAFC1]/50 p-4 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#FF89AC]"
           />
-          
+
           <input
             type="password"
-            placeholder="Input your password here"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="mb-6 w-full rounded-xl border-0 bg-[#FCAFC1]/50 p-4 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#FF89AC]"
           />
-        </div>
 
-        <button
-          onClick={handleLogin}
-          className="mt-6 w-full rounded-full bg-[#FF89AC] py-4 text-lg font-bold text-white shadow-lg transition-colors hover:bg-[#FCAFC1]"
-        >
-          Login
-        </button>
+          {error && <p className="text-red-500 text-center mb-3">{error}</p>}
+
+          <button
+            type="submit"
+            className="w-full rounded-full bg-[#FF89AC] py-4 text-lg font-bold text-white shadow-lg transition-colors hover:bg-[#FCAFC1]"
+          >
+            Login
+          </button>
+        </form>
 
         <p className="mt-6 text-center text-sm">
           <span className="text-gray-500 font-semibold">Don't have an account? </span>
@@ -59,11 +83,7 @@ const LoginPage = () => {
         </p>
       </div>
 
-      <img
-        src={WaveBottom}
-        alt="Bottom wave decoration"
-        className="absolute bottom-0 left-0 w-full"
-      />
+      <img src={WaveBottom} alt="Bottom wave decoration" className="absolute bottom-0 left-0 w-full" />
     </div>
   );
 };
