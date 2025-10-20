@@ -5,6 +5,7 @@ from app.models.redeem_item import RedeemItem
 from app.models.redeem_history import RedeemHistory
 from app.models.user import User  # pastikan kamu punya model User dengan field "points"
 from app.utils.config import settings
+from sqlalchemy.orm import joinedload
 
 UPLOAD_DIR = "uploads/redeem_items"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -126,13 +127,15 @@ class RedeemItemService:
 
     @staticmethod
     def get_user_history(db: Session, user_id: int):
-        """Ambil semua riwayat redeem user"""
+        """Ambil semua riwayat redeem user + detail item"""
         return (
             db.query(RedeemHistory)
+            .options(joinedload(RedeemHistory.item))  # 🔥 ini kunci utamanya
             .filter(RedeemHistory.user_id == user_id)
             .order_by(RedeemHistory.created_at.desc())
             .all()
         )
+
     @staticmethod
     def delete_item_by_id(db: Session, item_id: int):
         """Hapus item redeem berdasarkan ID"""

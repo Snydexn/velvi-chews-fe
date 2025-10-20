@@ -35,6 +35,7 @@ class RedeemHistoryResponse(BaseModel):
     item_id: int
     points_spent: int
     created_at: datetime
+    item: Optional[RedeemItemResponse] = None
 
     class Config:
         orm_mode = True

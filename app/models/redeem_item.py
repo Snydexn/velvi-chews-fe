@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime,Text
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
+
 from ..database import Base
 
 class RedeemItem(Base):
@@ -12,3 +14,5 @@ class RedeemItem(Base):
     description = Column(Text, nullable=True)
     stock = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    redeems = relationship("RedeemHistory", back_populates="item")
