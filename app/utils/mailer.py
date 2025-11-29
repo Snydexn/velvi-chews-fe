@@ -7,20 +7,20 @@ GAS_URL = settings.GAS_URL  # pastikan sudah di .env
 def send_verification_email(email: str, token: str):
     verification_link = f"{settings.BACKEND_URL}/auth/verify-email?token={token}"
 
-    # HTML body untuk email
     body = f"""
-    Hai Sobat Velvi Chews!
+    <p>Hai Sobat Velvi Chews!</p>
 
-    Terima kasih sudah bergabung! Untuk mengaktifkan akunmu dan mulai 
-    menikmati pengalaman seru di Velvi Chews, klik link berikut:
+    <p>Terima kasih sudah bergabung! Untuk mengaktifkan akunmu dan mulai 
+     menikmati pengalaman seru di Velvi Chews, klik link berikut:</p>
 
-    {verification_link}
+    <p><a href="{verification_link}">{verification_link}</a></p>
 
-    Kalau link tidak bisa diklik, cukup salin dan tempel di browser.
+    <p>Kalau link tidak bisa diklik, cukup salin dan tempel di browser.</p>
 
-    Selamat bersenang-senang,
-    Tim Velvi Chews
+    <p>Selamat bersenang-senang,<br>
+    Tim Velvi Chews</p>
     """
+
 
     payload = {
         "email": email,
