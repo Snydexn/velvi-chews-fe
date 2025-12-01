@@ -14,7 +14,7 @@ import {
 
 import ProfileWave from '../assets/profilewave.png'; 
 import DefaultAvatar from '../assets/default-avatar.png';
-import Navbar from '../components/NavBar';
+import Navbar from '../components/Navbar';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
