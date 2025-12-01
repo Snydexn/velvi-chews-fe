@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UpperWave from '../assets/upper.png';
 import BottomWave from '../assets/bottomwave.png';
-import Navbar from '../components/NavBar';
+import Navbar from '../components/Navbar';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL; // ambil dari .env
 

@@ -3,7 +3,7 @@ import Logo from "../assets/logo.png";
 import WaveTop from "../assets/upper.png";
 import WaveBottom from "../assets/homebottom.png";
 import WaveBg from "../assets/wave.png";
-import Navbar from "../components/NavBar";
+import Navbar from "../components/Navbar";
 import GummyProductImage from "../assets/gummy-product.png";
 
 // Komponen SVG untuk shape gelombang "Our Product"
