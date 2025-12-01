@@ -3,7 +3,7 @@ import { IoScan, IoTicketOutline, IoCartOutline } from 'react-icons/io5';
 
 import TopShape from '../assets/uppermembership.png'; 
 import BottomWave from '../assets/bottomwave.png'; 
-import Navbar from '../components/NavBar';
+import Navbar from '../components/Navbar';
 import { NavLink } from 'react-router-dom';
 
 const MembershipPage = () => {

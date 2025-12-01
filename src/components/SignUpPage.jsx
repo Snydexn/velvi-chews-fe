@@ -1,7 +1,7 @@
 // src/components/SignUpPage.jsx
 
 import React from 'react';
-import Logo from '../assets/logo.png'; 
+import Logo from '../assets/Logo.png'; 
 import WaveTop from '../assets/upperwave.png'; 
 import WaveBottom from '../assets/bottomwave.png'; 
 
