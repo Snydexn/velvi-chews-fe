@@ -42,7 +42,7 @@ function App() {
     <Router>
       <div className="mx-auto min-h-screen max-w-md border shadow-lg">
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/home" element={<HomePage />} />
