@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import Logo from '../assets/Logo.png'; 
 import WaveTop from '../assets/upperwave.png'; 
-import WaveBottom from '../assets/bottomwave.png'; 
+import WaveBottom from '../assets/bottomwave.png';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,8 +40,12 @@ const SignUpPage = () => {
       });
 
       if (response.ok) {
-        setMessage('✅ Registration successful! You can now log in.');
+        setMessage('✅ Registration successful! Redirecting to login...');
         setFormData({ name: '', email: '', password: '' });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1200);
       } else {
         const errorData = await response.json();
         setMessage(`❌ Registration failed: ${errorData.detail || 'Unknown error'}`);
@@ -107,7 +114,7 @@ const SignUpPage = () => {
 
         <p className="mt-4 text-center text-sm">
           <span className="text-gray-500 font-semibold">Already have an account? </span>
-          <a href="/" className="font-semibold text-[#FF89AC] hover:underline">
+          <a href="/login" className="font-semibold text-[#FF89AC] hover:underline">
             Sign in here
           </a>
         </p>
