@@ -10,13 +10,13 @@ import QrCodeImage from "../assets/qrcode.jpg";
 
 const HomePage = () => {
     return (
-      <div className="relative min-h-screen w-full bg-white pb-0 overflow-x-hidden">
+      <div className="relative min-h-screen w-full bg-white pb-0 overflow-x-hidden font-sans">
         
         <Navbar />
 
         {/* HEADER SECTION */}
         <header className="relative w-full -mt-30">
-          <img src={WaveTop} alt="Top wave" className="w-full" />
+          <img src={WaveTop} alt="Top wave" className="w-full object-cover" />
           <div className="absolute top-48 left-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform items-center justify-center gap-4 px-6">
             <img
               src={Logo}
@@ -34,14 +34,11 @@ const HomePage = () => {
         </header>
 
         {/* MAIN CONTENT */}
-        {/* FIX: Hapus 'px-6' dari sini agar elemen di dalamnya bisa full width */}
         <main className="flex flex-col items-center text-center w-full">
           
-          {/* --- BAGIAN KONTEN (Perlu Padding Manual) --- */}
-          {/* Kita bungkus konten teks dengan px-6 agar tetap rapi */}
-          <div className="w-full px-6 flex flex-col items-center">
-            
-            <section className="mt-8 flex flex-col items-center gap-4 max-w-lg mx-auto">
+          {/* --- BAGIAN 1: INTRO --- */}
+          <div className="w-full px-6 flex flex-col items-center max-w-lg mx-auto">
+            <section className="mt-8 flex flex-col items-center gap-4 w-full">
               <div className="w-full text-center">
                 <p className="mt-3 text-xs text-[#FCAFC1] leading-relaxed tracking-wide text-justifyy">
                   Diawali dengan kesadaran akan kesehatan yang semakin meningkat,
@@ -59,31 +56,34 @@ const HomePage = () => {
               </div>
             </section>
 
-            <div className="mt-6 w-full max-w-lg rounded-xl bg-[#FCAFC1]/90 p-4 text-white shadow-md mx-auto">
+            <div className="mt-6 w-full rounded-xl bg-[#FCAFC1]/90 p-4 text-white shadow-md">
               <p className="mt-3 text-xs text-white leading-relaxed tracking-wide text-justify">
                 Velvi Chews menjamin setiap produk kami tidak memakai pengawet
                 buatan maupun pemanis atau gula tambahan, memakai bahan buah asli
                 sehingga lebih aman untuk dikonsumsi sehari-hari.
               </p>
             </div>
-
           </div> 
-          {/* --- AKHIR BAGIAN KONTEN BER-PADDING --- */}
 
 
-          {/* Our Product Section (Full Width Background) */}
-          <section className="relative mt-2 w-full">
+          {/* --- BAGIAN 2: OUR PRODUCT --- */}
+          {/* Tambah overflow-hidden agar scale gambar aman */}
+          <section className="relative mt-8 w-full overflow-hidden">
+            {/* FIX: Scale diubah jadi 1.5 dan origin-top. 
+                Ini menarik background biru menjadi lebih panjang ke bawah 
+                supaya teks tidak kena bagian putih wave */}
             <img
               src={WaveBg}
               alt="Our Product Wave"
-              className="absolute top-5 left-0 w-full scale-160 origin-top object-cover"
+              className="absolute top-0 left-0 w-full h-full object-cover scale-[1.5] z-0 origin-top"
             />
-            {/* Konten di dalamnya tetap pakai padding */}
+            
             <div className="relative z-10 py-16 px-6">
               <h3 className="text-lg font-bold text-[#FF89AC]">OUR PRODUCT</h3>
               <p className="mt-1 text-sm font-semibold text-white">
                 Homemade Gummy
               </p>
+              {/* Teks tetap polos (tanpa kotak) sesuai request */}
               <p className="mt-3 text-xs text-white leading-relaxed tracking-wide text-justify max-w-lg mx-auto">
                 Gummy yang mengandung vitamin dari buah asli; gelatin yang baik
                 untuk kesehatan kulit, rambut, sendi, dan tulang; serta madu
@@ -94,9 +94,10 @@ const HomePage = () => {
             </div>
           </section>
 
-          {/* Vision Section (Butuh Padding) */}
-          <div className="w-full max-w-md px-6">
-            <section className="mt-5 mb-5">
+
+          {/* --- BAGIAN 3: VISION & MISSION --- */}
+          <div className="w-full px-6 max-w-lg mx-auto">
+            <section className="mt-10 mb-10">
               <h3 className="text-lg font-bold text-[#FF89AC]">OUR VISION</h3>
               <p className="mt-3 text-xs text-[#FCAFC1] leading-relaxed tracking-wide text-justify">
                 Visi kami adalah menjadi pelopor camilan sehat berbasis buah dan
@@ -104,13 +105,10 @@ const HomePage = () => {
                 baik.
               </p>
             </section>
-          </div>
 
-          {/* Mission & Contribution Section (Full Width Wrapper) */}
-          <div className="relative w-full overflow-hidden px-6">
-            <div className="relative z-10 mx-auto max-w-md py-10">
-              <div className="bg-[#FFCFDD] p-6 rounded-3xl">
-                <div className="bg-white/50 border-2 border-white rounded-2xl p-6">
+            <div className="relative w-full overflow-hidden mb-10">
+              <div className="bg-[#FFCFDD] p-6 rounded-3xl shadow-sm">
+                <div className="bg-white/60 border-2 border-white rounded-2xl p-6">
                   <section className="text-center">
                     <h3 className="text-lg font-bold text-[#FF89AC]">OUR MISSION</h3>
                     <p className="mt-3 text-xs text-[#2F2B2B] leading-relaxed tracking-wide text-justify">
@@ -133,28 +131,29 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* --- BAGIAN BAWAH / VISASHI LAB SECTION (FULL WIDTH & BESAR) --- */}
-          <div className="relative w-full mt-0 pb-40">
 
-            {/* Background Biru Full */}
-            <div className="absolute top-30 left-0 w-full h-full bg-[#B4E2F2] z-0"></div>
+          {/* --- BAGIAN 4: VISASHI LAB --- */}
+          {/* Overflow hidden agar aman */}
+          <div className="relative w-full mt-0 pb-40 overflow-hidden">
 
-            {/* Wave Image Full */}
+            <div className="absolute top-20 left-0 w-full h-full bg-[#B4E2F2] z-0"></div>
+
             <img
               src={WaveBottom}
               alt="Bottom wave"
-              className="absolute -top-1 left-0 w-full z-10 scale-[1.05] object-cover"
+              className="absolute -top-1 left-0 w-full z-10 scale-[1.05] object-cover origin-top"
             />
 
-            {/* Konten Besar */}
-            <section className="relative z-20 w-full pt-20 px-4">
+            {/* FIX: Padding Top (pt) diperbesar jadi 36.
+                Ini menurunkan seluruh konten (Logo, kotak, QR) ke bawah
+                agar Logo tidak menabrak gelombang pink di atas. */}
+            <section className="relative z-20 w-full pt-36 px-4 flex flex-col items-center">
               <div className="flex flex-col items-center mb-6">
                 <div className="flex items-center gap-6">
                   <img src={VisashiLabLogo} alt="Visashi Lab" className="w-72" />
                 </div>
               </div>
 
-              {/* Kotak Teks Besar */}
               <div className="w-full bg-white/50 backdrop-blur-sm border border-white rounded-3xl px-8 py-10 text-center text-[#2F2B2B] text-base shadow-sm leading-relaxed">
                 <p>
                   Siap cari tahu rasa gummy yang paling match sama vibe kamu?
