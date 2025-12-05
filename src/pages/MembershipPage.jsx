@@ -3,21 +3,24 @@ import { IoScan, IoTicketOutline, IoCartOutline } from 'react-icons/io5';
 import TopShape from '../assets/uppermembership.png'; 
 import BottomWave from '../assets/bottomwave.png'; 
 import Navbar from '../components/Navbar';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom'; // FIX: Tambah useNavigate
 
 const MembershipPage = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState(null);
   const [redeemHistory, setRedeemHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // FIX: Inisialisasi navigate
 
   // === Ambil data profil + riwayat redeem ===
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
+        
+        // FIX: Gunakan navigate replace agar tidak looping saat klik Back
         if (!token) {
-          window.location.href = "/login";
+          navigate('/login', { replace: true });
           return;
         }
 
@@ -25,6 +28,14 @@ const MembershipPage = () => {
         const profileRes = await fetch(`${API_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        
+        // Cek jika token expired atau invalid dari server
+        if (profileRes.status === 401) {
+            localStorage.removeItem("token");
+            navigate('/login', { replace: true });
+            return;
+        }
+
         const profileData = await profileRes.json();
         setUser(profileData);
 
@@ -37,13 +48,14 @@ const MembershipPage = () => {
         setRedeemHistory(historyData);
       } catch (err) {
         console.error("Gagal memuat data:", err);
+        // Opsional: Jika error parah, bisa redirect juga
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [API_URL]);
+  }, [API_URL, navigate]); // FIX: Tambahkan navigate ke dependency array
 
   if (loading) {
     return (
@@ -53,6 +65,7 @@ const MembershipPage = () => {
     );
   }
 
+  // Guard clause: Jika user null (misal error fetch), jangan render konten
   if (!user) return null;
 
   return (

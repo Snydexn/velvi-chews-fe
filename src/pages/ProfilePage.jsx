@@ -45,8 +45,8 @@ const ProfilePage = () => {
         setUser(data);
         setNewName(data.name);
         if (data.profile_picture) {
-        setImagePreview(data.profile_picture);
-      }
+          setImagePreview(data.profile_picture);
+        }
 
       } catch (err) {
         console.error(err);
@@ -118,12 +118,17 @@ const ProfilePage = () => {
   );
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-50 pb-24">
+    // FIX: Tambahkan overflow-x-hidden agar halaman tidak bisa digeser ke samping
+    // FIX: Gunakan w-full (bukan w-screen) untuk lebar yang aman
+    <div className="relative min-h-screen w-full bg-gray-50 pb-24 overflow-x-hidden font-sans">
       <Navbar />
+      
+      {/* Background Image */}
+      {/* Pastikan width dan height tercover dengan baik */}
       <img
         src={ProfileWave}
         alt="Profile background wave"
-        className="absolute -top-50 left-0 -z-0 w-full h-full object-cover"
+        className="absolute top-0 left-0 -z-0 w-full h-full object-cover"
       />
 
       <div className="relative z-10 flex flex-col items-center px-6">
@@ -154,9 +159,9 @@ const ProfilePage = () => {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onBlur={() => handleUpdateProfile()}
-            className="text-2xl font-bold text-center bg-transparent border-none focus:outline-none"
+            className="text-2xl font-bold text-center bg-transparent border-none focus:outline-none text-white placeholder-white/80"
           />
-          <p className="text-sm font-light">{user.email}</p>
+          <p className="text-sm font-light text-white/90">{user.email}</p>
         </header>
 
         <div className="mt-6 flex w-full max-w-xs items-center justify-around rounded-2xl bg-white p-4 shadow-lg">

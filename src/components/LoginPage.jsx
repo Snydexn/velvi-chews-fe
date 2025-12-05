@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/Logo.png';
+// FIX: Import logo Bubblix
+import BubblixLogo from '../assets/bubblixlogo.png';
 import WaveTop from '../assets/upperwave.png';
 import WaveBottom from '../assets/bottomwave.png';
 
@@ -44,7 +46,17 @@ const LoginPage = () => {
       <img src={WaveTop} alt="Top wave decoration" className="absolute top-0 left-0 w-full" />
 
       <div className="z-10 mt-16 flex w-full max-w-xs flex-col items-center p-4 sm:max-w-sm md:mt-20">
-        <img src={Logo} alt="Velvi Chews Logo" className="mb-3 w-32" />
+        
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <img
+            src={BubblixLogo}
+            alt="Bubblix Logo"
+            className="h-18 w-auto object-contain"
+          />
+
+          <img src={Logo} alt="Velvi Chews Logo" className="w-28" />
+          
+        </div>
 
         <form onSubmit={handleLogin} className="w-full rounded-2xl bg-white p-6 shadow-xl">
           <h2 className="mb-6 text-center text-2xl font-bold text-[#FCAFC1]">Login</h2>
