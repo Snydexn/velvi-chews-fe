@@ -9,13 +9,10 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     BACKEND_URL:str
+    FRONTEND_URL:str
     GAS_URL:str
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
-
-
-
-
 
     class Config:
         env_file = ".env"

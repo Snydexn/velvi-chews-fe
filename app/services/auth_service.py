@@ -1,4 +1,6 @@
-from datetime import timedelta
+from datetime import timedelta,datetime
+import uuid
+import requests
 from fastapi import HTTPException, status,Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -8,12 +10,12 @@ from app.utils.config import settings
 from app.database import get_db
 from app.utils.email_verification import create_verification_token
 from app.utils.mailer import send_verification_email
+from passlib.context import CryptContext
 
-
-
+GAS_URL = settings.GAS_URL 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
+    
 
 class AuthService:
     @staticmethod
@@ -91,3 +93,65 @@ class AuthService:
             )
 
         return user
+    @staticmethod
+    def request_password_reset(email: str, db: Session):
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            return  # jangan bocorkan bahwa email tidak ada
+
+        token = str(uuid.uuid4())
+        expire = datetime.utcnow() + timedelta(minutes=30)
+
+        user.reset_token = token
+        user.reset_token_expire = expire
+        db.commit()
+        
+        
+
+        reset_link = f"{settings.BACKEND_URL}/reset-password?token={token}"
+
+        message = f"""
+<html>
+  <body>
+    <h2>Reset Password</h2>
+    <p>Klik tombol di bawah untuk reset password:</p>
+    <a href="{reset_link}" 
+       style="padding: 10px 20px; background #FC809F; color: white; 
+              text-decoration: none; border-radius: 6px;">
+       Reset Password
+    </a>
+    <p>Atau copy dan paste link berikut ke browser:</p>
+    <p>{reset_link}</p>
+    <br>
+    <p>Link berlaku selama <b>30 menit</b>.</p>
+  </body>
+</html>
+"""
+
+        # Kirim email melalui App Script
+        response = requests.post(GAS_URL, json={
+        "email": email,
+        "subject": "Reset Password",
+        "body": message
+    })
+        print("GAS RESPONSE:", response.text)
+        return True
+
+
+    @staticmethod
+    def reset_password(token: str, new_password: str, db: Session):
+        user = db.query(User).filter(User.reset_token == token).first()
+        if not user:
+            return "invalid"
+
+        if user.reset_token_expire < datetime.utcnow():
+            return "expired"
+
+        hashed = hash_password(new_password)
+
+        user.password_hash = hashed
+        user.reset_token = None
+        user.reset_token_expire = None
+        db.commit()
+
+        return "success"

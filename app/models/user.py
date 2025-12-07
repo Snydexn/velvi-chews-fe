@@ -13,5 +13,7 @@ class User(Base):
     total_points = Column(Integer, default=0)
     profile_picture = Column(String(255), nullable=True)
     is_verified = Column(Boolean, default=False)
+    reset_token = Column(String, nullable=True)
+    reset_token_expire = Column(DateTime, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
