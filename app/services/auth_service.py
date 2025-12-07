@@ -108,7 +108,7 @@ class AuthService:
         
         
 
-        reset_link = f"{settings.BACKEND_URL}/reset-password?token={token}"
+        reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
 
         message = f"""
 <html>
@@ -134,7 +134,6 @@ class AuthService:
         "subject": "Reset Password",
         "body": message
     })
-        print("GAS RESPONSE:", response.text)
         return True
 
 
