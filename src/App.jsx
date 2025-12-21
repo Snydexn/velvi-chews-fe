@@ -12,6 +12,8 @@ import HistoryPage from "./pages/HistoryPage";
 import ProfilePage from "./pages/ProfilePage";
 import AccountInfoPage from "./pages/AccountInfoPage";
 import AddItemPage from "./pages/AddItemPage";
+import ResetPasswordPage from "./components/ResetPasswordPage";
+import ForgetPasswordPage from "./components/ForgetPasswordPage";
 
 function App() {
   const [showSplash, setShowSplash] = useState(false);
@@ -53,6 +55,8 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/account-info" element={<AccountInfoPage />} />
           <Route path="/profile/add-item" element={<AddItemPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/forget-password" element={<ForgetPasswordPage/>} />
           
         </Routes>
       </div>

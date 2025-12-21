@@ -73,6 +73,12 @@ const LoginPage = () => {
           >
             Login
           </button>
+           <p className="mt-6 text-center text-sm">
+          <span className="text-gray-500 font-semibold">Forget Your Password? </span>
+          <a href="/forget-password" className="font-semibold text-[#FF89AC] hover:underline">
+            Forget Password
+          </a>
+        </p>
         </form>
 
         <p className="mt-6 text-center text-sm">
