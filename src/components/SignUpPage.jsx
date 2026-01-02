@@ -1,18 +1,18 @@
 // src/components/SignUpPage.jsx
-import React, { useState } from 'react';
-import Logo from '../assets/logo.png'; 
-import WaveTop from '../assets/upperwave.png'; 
-import WaveBottom from '../assets/bottomwave.png'; 
+import React, { useState } from "react";
+import Logo from "../assets/Logo.png";
+import WaveTop from "../assets/upperwave.png";
+import WaveBottom from "../assets/bottomwave.png";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
@@ -25,34 +25,42 @@ const SignUpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        setMessage('✅ Registration successful! Please check your email to verify your account.');
-        setFormData({ name: '', email: '', password: '' });
+        setMessage(
+          "✅ Registration successful! Please check your email to verify your account."
+        );
+        setFormData({ name: "", email: "", password: "" });
       } else {
         const errorData = await response.json();
-        setMessage(`❌ Registration failed. Please complete all required fields.`);
+        setMessage(
+          `❌ Registration failed. Please complete all required fields.`
+        );
       }
     } catch (error) {
       setMessage(`❌ Error connecting to server: ${error.message}`);
     } finally {
       setLoading(false);
-    }  
+    }
   };
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-start overflow-hidden bg-white">
-      <img src={WaveTop} alt="Top wave" className="absolute top-0 left-0 w-full" />
+      <img
+        src={WaveTop}
+        alt="Top wave"
+        className="absolute top-0 left-0 w-full"
+      />
 
       <form
         onSubmit={handleSubmit}
@@ -61,7 +69,9 @@ const SignUpPage = () => {
         <img src={Logo} alt="Velvi Chews Logo" className="mb-3 w-28" />
 
         <div className="w-full rounded-2xl bg-white p-6 shadow-xl">
-          <h2 className="mb-6 text-center text-2xl font-bold text-[#FCAFC1]">Sign Up</h2>
+          <h2 className="mb-6 text-center text-2xl font-bold text-[#FCAFC1]">
+            Sign Up
+          </h2>
 
           <input
             type="text"
@@ -96,7 +106,7 @@ const SignUpPage = () => {
           disabled={loading}
           className="mt-8 w-full rounded-full bg-[#FF89AC] py-4 text-lg font-bold text-white shadow-lg transition-colors hover:bg-[#FCAFC1] disabled:opacity-50"
         >
-          {loading ? 'Signing up...' : 'Sign Up'}
+          {loading ? "Signing up..." : "Sign Up"}
         </button>
 
         {message && (
@@ -106,14 +116,20 @@ const SignUpPage = () => {
         )}
 
         <p className="mt-4 text-center text-sm">
-          <span className="text-gray-500 font-semibold">Already have an account? </span>
+          <span className="text-gray-500 font-semibold">
+            Already have an account?{" "}
+          </span>
           <a href="/" className="font-semibold text-[#FF89AC] hover:underline">
             Sign in here
           </a>
         </p>
       </form>
 
-      <img src={WaveBottom} alt="Bottom wave" className="absolute bottom-0 left-0 w-full" />
+      <img
+        src={WaveBottom}
+        alt="Bottom wave"
+        className="absolute bottom-0 left-0 w-full"
+      />
     </div>
   );
 };

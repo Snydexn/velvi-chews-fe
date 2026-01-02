@@ -1,39 +1,39 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Logo from '../assets/logo.png';
-import WaveTop from '../assets/upperwave.png';
-import WaveBottom from '../assets/bottomwave.png';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
+import WaveTop from "../assets/upperwave.png";
+import WaveBottom from "../assets/bottomwave.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const API_URL = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault(); // supaya tidak reload halaman
-    setError('');
+    setError("");
 
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.detail || 'Login gagal');
+        throw new Error(errData.detail || "Login gagal");
       }
 
       const data = await response.json();
 
       // Simpan token ke localStorage (jika pakai JWT)
-      localStorage.setItem('token', data.access_token);
+      localStorage.setItem("token", data.access_token);
 
       // Redirect ke home
-      navigate('/home');
+      navigate("/home");
     } catch (err) {
       setError(err.message);
     }
@@ -41,13 +41,22 @@ const LoginPage = () => {
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-start overflow-hidden bg-white">
-      <img src={WaveTop} alt="Top wave decoration" className="absolute top-0 left-0 w-full" />
+      <img
+        src={WaveTop}
+        alt="Top wave decoration"
+        className="absolute top-0 left-0 w-full"
+      />
 
       <div className="z-10 mt-16 flex w-full max-w-xs flex-col items-center p-4 sm:max-w-sm md:mt-20">
         <img src={Logo} alt="Velvi Chews Logo" className="mb-3 w-32" />
 
-        <form onSubmit={handleLogin} className="w-full rounded-2xl bg-white p-6 shadow-xl">
-          <h2 className="mb-6 text-center text-2xl font-bold text-[#FCAFC1]">Login</h2>
+        <form
+          onSubmit={handleLogin}
+          className="w-full rounded-2xl bg-white p-6 shadow-xl"
+        >
+          <h2 className="mb-6 text-center text-2xl font-bold text-[#FCAFC1]">
+            Login
+          </h2>
 
           <input
             type="email"
@@ -73,23 +82,37 @@ const LoginPage = () => {
           >
             Login
           </button>
-           <p className="mt-6 text-center text-sm">
-          <span className="text-gray-500 font-semibold">Forget Your Password? </span>
-          <a href="/forget-password" className="font-semibold text-[#FF89AC] hover:underline">
-            Forget Password
-          </a>
-        </p>
+          <p className="mt-6 text-center text-sm">
+            <span className="text-gray-500 font-semibold">
+              Forget Your Password?{" "}
+            </span>
+            <a
+              href="/forget-password"
+              className="font-semibold text-[#FF89AC] hover:underline"
+            >
+              Forget Password
+            </a>
+          </p>
         </form>
 
         <p className="mt-6 text-center text-sm">
-          <span className="text-gray-500 font-semibold">Don't have an account? </span>
-          <a href="/signup" className="font-semibold text-[#FF89AC] hover:underline">
+          <span className="text-gray-500 font-semibold">
+            Don't have an account?{" "}
+          </span>
+          <a
+            href="/signup"
+            className="font-semibold text-[#FF89AC] hover:underline"
+          >
             Sign up here
           </a>
         </p>
       </div>
 
-      <img src={WaveBottom} alt="Bottom wave decoration" className="absolute bottom-0 left-0 w-full" />
+      <img
+        src={WaveBottom}
+        alt="Bottom wave decoration"
+        className="absolute bottom-0 left-0 w-full"
+      />
     </div>
   );
 };

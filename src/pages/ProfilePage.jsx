@@ -9,7 +9,7 @@ import {
 import { IoLogOutOutline, IoAddCircleOutline, IoScan } from "react-icons/io5";
 import ProfileWave from "../assets/profilewave.png";
 import DefaultAvatar from "../assets/default-avatar.png";
-import Navbar from "../components/NavBar";
+import Navbar from "../components/Navbar";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -45,9 +45,8 @@ const ProfilePage = () => {
         setUser(data);
         setNewName(data.name);
         if (data.profile_picture) {
-        setImagePreview(data.profile_picture);
-      }
-
+          setImagePreview(data.profile_picture);
+        }
       } catch (err) {
         console.error(err);
       } finally {

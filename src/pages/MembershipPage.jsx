@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { IoScan, IoTicketOutline, IoCartOutline } from 'react-icons/io5'; 
-import TopShape from '../assets/uppermembership.png'; 
-import BottomWave from '../assets/bottomwave.png'; 
-import Navbar from '../components/NavBar';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { IoScan, IoTicketOutline, IoCartOutline } from "react-icons/io5";
+import TopShape from "../assets/uppermembership.png";
+import BottomWave from "../assets/bottomwave.png";
+import Navbar from "../components/Navbar";
+import { NavLink } from "react-router-dom";
 
 const MembershipPage = () => {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -33,7 +33,7 @@ const MembershipPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         const historyData = await historyRes.json();
-        
+
         setRedeemHistory(historyData);
       } catch (err) {
         console.error("Gagal memuat data:", err);
@@ -58,15 +58,15 @@ const MembershipPage = () => {
   return (
     <div className="relative min-h-screen w-full bg-gray-50 pb-24">
       <Navbar />
-      <img 
-        src={TopShape} 
-        alt="Top background shape" 
+      <img
+        src={TopShape}
+        alt="Top background shape"
         className="absolute top-0 left-0 w-full -z-0"
       />
-      
+
       {/* === POINT SECTION === */}
       <header className="relative z-10 flex justify-center pt-12">
-        <div className="flex h-56 w-56 items-center justify-center rounded-full bg-[#EAF7FF] shadow-xl"> 
+        <div className="flex h-56 w-56 items-center justify-center rounded-full bg-[#EAF7FF] shadow-xl">
           <div className="flex h-48 w-48 items-center justify-center rounded-full bg-white/40 shadow-xl">
             <div className="flex h-40 w-40 flex-col items-center justify-center rounded-full bg-white shadow-[inset_0_0_8px_rgba(0,0,0,0.08)]">
               <span className="text-base text-[#B4E2F2]">Your Point</span>
@@ -105,10 +105,14 @@ const MembershipPage = () => {
 
         {/* === REDEEM HISTORY === */}
         <div className="w-full max-w-xs self-center">
-          <h2 className="mb-3 text-lg font-bold text-[#FCAFC1]">Redeem History</h2>
+          <h2 className="mb-3 text-lg font-bold text-[#FCAFC1]">
+            Redeem History
+          </h2>
 
           {redeemHistory.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center">Belum ada riwayat redeem</p>
+            <p className="text-sm text-gray-400 text-center">
+              Belum ada riwayat redeem
+            </p>
           ) : (
             redeemHistory.map((item, idx) => (
               <div
@@ -116,13 +120,18 @@ const MembershipPage = () => {
                 className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-md mb-2"
               >
                 <div>
-                  <p className="font-semibold text-gray-800">{item.item?.name || '-'}</p>
+                  <p className="font-semibold text-gray-800">
+                    {item.item?.name || "-"}
+                  </p>
                   <p className="text-xs text-gray-400">
                     {item.created_at
-                      ? new Date(item.created_at.replace(" ", "T")).toLocaleDateString(
-                          "id-ID",
-                          { year: "numeric", month: "short", day: "numeric" }
-                        )
+                      ? new Date(
+                          item.created_at.replace(" ", "T")
+                        ).toLocaleDateString("id-ID", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })
                       : "-"}
                   </p>
                 </div>
@@ -132,13 +141,12 @@ const MembershipPage = () => {
               </div>
             ))
           )}
-
         </div>
       </main>
 
-      <img 
-        src={BottomWave} 
-        alt="Bottom background wave" 
+      <img
+        src={BottomWave}
+        alt="Bottom background wave"
         className="absolute bottom-0 left-0 w-full -z-0"
       />
     </div>
