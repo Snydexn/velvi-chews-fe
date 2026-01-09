@@ -1,7 +1,7 @@
 // src/components/SplashScreen.jsx
 
 import React from 'react';
-import Logo from '../assets/logo.png'; // Sesuaikan nama file logomu
+import Logo from '../assets/Logo.png'; // Sesuaikan nama file logomu
 import WaveTop from '../assets/upperwave.png'; // Sesuaikan nama file hiasan atas
 import WaveBottom from '../assets/bottomwave.png'; // Sesuaikan nama file hiasan bawah
 
