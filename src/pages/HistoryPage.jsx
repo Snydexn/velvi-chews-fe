@@ -1,34 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import UpperWave from '../assets/upper.png';
-import BottomWave from '../assets/bottomwave.png';
-import Navbar from '../components/Navbar';
+import React, { useEffect, useState } from "react";
+import UpperWave from "../assets/upper.png";
+import BottomWave from "../assets/bottomwave.png";
+import Navbar from "../components/Navbar";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL; // ambil dari .env
 
 // === Komponen Kartu Riwayat ===
 const HistoryCard = ({ item }) => {
-  const pointsColor = 'text-[#FF89AC]'; // warna merah untuk pengurangan poin
+  const pointsColor = "text-[#FF89AC]"; // warna merah untuk pengurangan poin
 
   const dateObject = new Date(item.created_at);
-  const formattedDate = dateObject.toLocaleDateString('id-ID', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+  const formattedDate = dateObject.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
   });
-  const formattedTime = dateObject.toLocaleTimeString('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
+  const formattedTime = dateObject.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   return (
     <div className="flex w-full max-w-sm items-center justify-between rounded-2xl bg-white p-4 shadow-md">
       <div>
-        <h3 className="font-semibold text-gray-800">{item.item?.name || '-'}</h3>
-        <p className="text-xs text-gray-400">{formattedDate}, {formattedTime}</p>
+        <h3 className="font-semibold text-gray-800">
+          {item.item?.name || "-"}
+        </h3>
+        <p className="text-xs text-gray-400">
+          {formattedDate}, {formattedTime}
+        </p>
       </div>
-      <p className={`text-xl font-bold ${pointsColor}`}>
-        -{item.points_spent}
-      </p>
+      <p className={`text-xl font-bold ${pointsColor}`}>-{item.points_spent}</p>
     </div>
   );
 };
@@ -41,9 +43,9 @@ const HistoryPage = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
-          console.warn('⚠️ Tidak ada token login, redirect ke login page.');
+          console.warn("⚠️ Tidak ada token login, redirect ke login page.");
           return;
         }
 
@@ -54,13 +56,13 @@ const HistoryPage = () => {
         });
 
         if (!res.ok) {
-          throw new Error('Gagal mengambil data history');
+          throw new Error("Gagal mengambil data history");
         }
 
         const data = await res.json();
         setHistory(data);
       } catch (error) {
-        console.error('Error fetching history:', error);
+        console.error("Error fetching history:", error);
       } finally {
         setLoading(false);
       }
@@ -72,8 +74,16 @@ const HistoryPage = () => {
   return (
     <div className="relative min-h-screen w-full bg-white pb-24">
       {/* Background */}
-      <img src={UpperWave} alt="Top wave background" className="absolute -top-20 left-0 w-full -z-0" />
-      <img src={BottomWave} alt="Bottom wave background" className="absolute bottom-0 left-0 w-full -z-0" />
+      <img
+        src={UpperWave}
+        alt="Top wave background"
+        className="absolute -top-20 left-0 w-full -z-0"
+      />
+      <img
+        src={BottomWave}
+        alt="Bottom wave background"
+        className="absolute bottom-0 left-0 w-full -z-0"
+      />
 
       <Navbar />
 
